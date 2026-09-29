@@ -67,7 +67,7 @@ function App() {
     let lastReverseTime = 0
     let previousScrollY = window.scrollY
     let direction: 'up' | 'down' = 'down'
-    const playbackSpeed = 3
+    const playbackSpeed = 2
     const reversePlayback = (time: number) => {
       if (direction !== 'up') {
         reverseFrame = 0
@@ -149,7 +149,7 @@ function App() {
   }, [])
 
     return <div className="site-shell">
-      <div className="cosmic-background" aria-hidden="true"><video ref={heroVideoRef} className="cosmic-video" muted loop playsInline preload="metadata" poster={`${import.meta.env.BASE_URL}favicon.svg`}><source src={`${import.meta.env.BASE_URL}portfolio-video.mp4`} type="video/mp4" /><source src={`${import.meta.env.BASE_URL}cosmic.mp4`} type="video/mp4" /></video><div className="cosmic-vignette" /></div>
+      <div className="cosmic-background" aria-hidden="true"><video ref={heroVideoRef} className="cosmic-video" muted loop playsInline preload="auto" poster={`${import.meta.env.BASE_URL}favicon.svg`}><source src={`${import.meta.env.BASE_URL}portfolio-video.mp4`} type="video/mp4" /><source src={`${import.meta.env.BASE_URL}cosmic.mp4`} type="video/mp4" /></video><div className="cosmic-vignette" /></div>
       <div className="nebula" aria-hidden="true" /><div className="film-grain" aria-hidden="true" />
       <header className={`nav-wrap ${scrolled ? 'nav-wrap--scrolled' : ''}`}><a className="brand" href="#inicio" aria-label="Volver al inicio">CMA<span>.</span></a><button className="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button><nav className={`main-nav ${menuOpen ? 'main-nav--open' : ''}`} aria-label="Navegación principal">{navItems.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)}><AsciiGlitchText>{label}</AsciiGlitchText></a>)}</nav></header>
       <main>
