@@ -67,6 +67,7 @@ function App() {
     let lastReverseTime = 0
     let previousScrollY = window.scrollY
     let direction: 'up' | 'down' = 'down'
+    const playbackSpeed = 3
     const reversePlayback = (time: number) => {
       if (direction !== 'up') {
         reverseFrame = 0
@@ -75,7 +76,7 @@ function App() {
       }
       const elapsed = lastReverseTime ? Math.min((time - lastReverseTime) / 1000, 0.05) : 0
       lastReverseTime = time
-      video.currentTime = Math.max(0, video.currentTime - elapsed)
+      video.currentTime = Math.max(0, video.currentTime - elapsed * playbackSpeed)
       reverseFrame = requestAnimationFrame(reversePlayback)
     }
     const respondToMovement = (scrollDelta: number) => {
@@ -90,6 +91,7 @@ function App() {
         if (reverseFrame) cancelAnimationFrame(reverseFrame)
         reverseFrame = 0
         lastReverseTime = 0
+        video.playbackRate = playbackSpeed
         void video.play().catch(() => undefined)
       }
       window.clearTimeout(pauseTimer)
@@ -98,7 +100,7 @@ function App() {
         if (reverseFrame) cancelAnimationFrame(reverseFrame)
         reverseFrame = 0
         lastReverseTime = 0
-      }, 32)
+      }, 260)
     }
     const playWhileScrolling = () => {
       respondToMovement(window.scrollY - previousScrollY)
