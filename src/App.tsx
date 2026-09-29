@@ -95,12 +95,14 @@ function App() {
         void video.play().catch(() => undefined)
       }
       window.clearTimeout(pauseTimer)
-      pauseTimer = window.setTimeout(() => {
-        video.pause()
-        if (reverseFrame) cancelAnimationFrame(reverseFrame)
-        reverseFrame = 0
-        lastReverseTime = 0
-      }, 260)
+      if (direction === 'up') {
+        pauseTimer = window.setTimeout(() => {
+          video.pause()
+          if (reverseFrame) cancelAnimationFrame(reverseFrame)
+          reverseFrame = 0
+          lastReverseTime = 0
+        }, 260)
+      }
     }
     const playWhileScrolling = () => {
       respondToMovement(window.scrollY - previousScrollY)
