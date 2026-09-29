@@ -62,62 +62,25 @@ function App() {
       video?.pause()
       return
     }
-    let pauseTimer: number | undefined
-    let reverseFrame = 0
-    let lastReverseTime = 0
-    let previousScrollY = window.scrollY
-    let direction: 'up' | 'down' = 'down'
-    const playbackSpeed = 2
-    const reversePlayback = (time: number) => {
-      if (direction !== 'up') {
-        reverseFrame = 0
-        lastReverseTime = 0
-        return
-      }
-      const elapsed = lastReverseTime ? Math.min((time - lastReverseTime) / 1000, 0.05) : 0
-      lastReverseTime = time
-      video.currentTime = Math.max(0, video.currentTime - elapsed * playbackSpeed)
-      reverseFrame = requestAnimationFrame(reversePlayback)
-    }
-    const respondToMovement = (scrollDelta: number) => {
-      if (scrollDelta === 0) return
-      previousScrollY = window.scrollY
-      if (scrollDelta < 0) {
-        direction = 'up'
-        video.pause()
-        if (!reverseFrame) reverseFrame = requestAnimationFrame(reversePlayback)
-      } else {
-        direction = 'down'
-        if (reverseFrame) cancelAnimationFrame(reverseFrame)
-        reverseFrame = 0
-        lastReverseTime = 0
-        video.playbackRate = playbackSpeed
-        void video.play().catch(() => undefined)
-      }
-      window.clearTimeout(pauseTimer)
-      if (direction === 'up') {
-        pauseTimer = window.setTimeout(() => {
-          video.pause()
-          if (reverseFrame) cancelAnimationFrame(reverseFrame)
-          reverseFrame = 0
-          lastReverseTime = 0
-        }, 260)
-      }
-    }
-    const playWhileScrolling = () => {
-      respondToMovement(window.scrollY - previousScrollY)
-    }
-    const respondToWheel = (event: WheelEvent) => {
-      if (Math.abs(event.deltaY) > 0) respondToMovement(event.deltaY)
-    }
-    window.addEventListener('scroll', playWhileScrolling, { passive: true })
-    window.addEventListener('wheel', respondToWheel, { passive: true })
+    video.pause()
+    let refreshTimeline: (() => void) | undefined
+    const context = gsap.context(() => {
+      const timeline = ScrollTrigger.create({
+        trigger: document.documentElement,
+        start: 'top top',
+        end: 'bottom bottom',
+        invalidateOnRefresh: true,
+        onUpdate: (trigger) => {
+          if (Number.isFinite(video.duration) && video.duration > 0) video.currentTime = trigger.progress * video.duration
+        },
+      })
+      refreshTimeline = () => timeline.refresh()
+      video.addEventListener('loadedmetadata', refreshTimeline)
+    })
     return () => {
-      window.removeEventListener('scroll', playWhileScrolling)
-      window.removeEventListener('wheel', respondToWheel)
-      window.clearTimeout(pauseTimer)
-      if (reverseFrame) cancelAnimationFrame(reverseFrame)
       video.pause()
+      if (refreshTimeline) video.removeEventListener('loadedmetadata', refreshTimeline)
+      context.revert()
     }
   }, [])
 
