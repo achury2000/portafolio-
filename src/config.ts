@@ -1,7 +1,7 @@
 export const portfolioConfig = {
   name: 'Cristian Mateo Achury Arboleda',
   role: 'Desarrollador frontend',
-  profileImage: '/profile.jpg',
+  profileImage: 'profile.jpg',
   email: '[TU EMAIL]',
   github: 'https://github.com/achury2000',
   linkedin: 'https://www.linkedin.com/in/cristian-mateo-achury-arboleda-39b4b9246',
