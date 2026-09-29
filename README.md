@@ -1,4 +1,8 @@
-# React + TypeScript + Vite
+# Portafolio cósmico de Cristian Achury
+
+Vista pública: https://achury2000.github.io/portafolio-/
+
+El despliegue se genera automáticamente desde `main` hacia la rama `gh-pages` mediante GitHub Actions.
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
